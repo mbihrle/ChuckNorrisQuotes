@@ -1,58 +1,45 @@
 import { React, Component } from "react";
 
 import "./App.css";
-import CardList from "../components/CardList/CardList";
-import SearchBox from "../components/SearchBox/SearchBox";
-
-// import { quotes } from "../quotes";
+import Card from "../components/Card/Card";
 
 class App extends Component {
     constructor() {
         super();
         this.state = {
-            quotes: [],
-            searchfield: "",
+            quote: "Hallo",
         };
     }
 
     componentDidMount() {
-        fetch("https://jsonplaceholder.typicode.com/users")
+        console.log("componentDidMount");
+        fetch("https://api.chucknorris.io/jokes/random")
             .then((response) => response.json())
-            .then((users) => {
-                // this.setState({ });
-                this.setState({ quotes: users });
+            .then((quote) => {
+                this.setState({ quote: quote.value }, () =>
+                    console.log("myState: ", this.state)
+                );
             });
     }
 
-    onSearchChange = (event) => {
-        this.setState({ searchfield: event.target.value });
-    };
-
     render() {
-        const filteredQuotes = this.state.quotes.filter((quote) => {
-            return quote.name
-                .toLowerCase()
-                .includes(this.state.searchfield.toLowerCase());
-        });
-        if (this.state.quotes.length === 0) {
-            return <h1>Loading ...</h1>;
-        } else {
-            return (
-                <div>
-                    <div className="flex">
-                        <div className="w-60 pa1"></div>
-                        <div className="w-30 pa1 tc">
-                            <h1 id="header" className="mt5">
-                                Zitate Chuck Norris
-                            </h1>
-                            <SearchBox searchChange={this.onSearchChange} />
-                            <CardList quotes={filteredQuotes} />
+        console.log("render");
+        return (
+            <div>
+                <div className="flex">
+                    <div className="w-60 pa1"></div>
+                    <div className="w-30 pa1 tc">
+                        <h1 id="header" className="mt5">
+                            Zitate Chuck Norris
+                        </h1>
+                        <div className="mt7">
+                            <Card quote={this.state.quote} />
                         </div>
-                        <div className="w-10 pa1"></div>
                     </div>
+                    <div className="w-10 pa1"></div>
                 </div>
-            );
-        }
+            </div>
+        );
     }
 }
 
